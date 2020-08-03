@@ -11,15 +11,29 @@ carteira_put_args.add_argument('pm', type=int, help='Preço Médio', required=Tr
 
 carteira = {}
 
+def se_acao_nao_existir(acao_id):
+    if acao_id not in carteira:
+        abort(404, message='Não consigo achar essa ação')
+
+def se_ja_existir_acao(acao_id):
+    if acao_id in carteira:
+        abort(404, message='Essa ação já existe')
+
 
 class Carteira(Resource):
     def get(self, acao_id):
         return carteira[acao_id]
 
     def put(self, acao_id):
+        se_ja_existir_acao(acao_id)
         args = carteira_put_args.parse_args()
         carteira[acao_id] = args
         return carteira[acao_id], 201
+
+    def delete(self, acao_id):
+        se_acao_nao_existir(acao_id)
+        del carteira[acao_id]
+        return '', 204  
 
 api.add_resource(Carteira, '/carteira/<int:acao_id>')
 
