@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, abort
 
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ api = Api(app)
 
 carteira_put_args = reqparse.RequestParser()
 carteira_put_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
-carteira_put_args.add_argument('pm', type=int, help='Preço Médio', required=True)
+carteira_put_args.add_argument('pm', type=float, help='Preço Médio', required=True)
 
 carteira = {}
 
@@ -22,6 +22,7 @@ def se_ja_existir_acao(acao_id):
 
 class Carteira(Resource):
     def get(self, acao_id):
+        se_acao_nao_existir(acao_id)
         return carteira[acao_id]
 
     def put(self, acao_id):
@@ -33,7 +34,7 @@ class Carteira(Resource):
     def delete(self, acao_id):
         se_acao_nao_existir(acao_id)
         del carteira[acao_id]
-        return '', 204  
+        return '', 204
 
 api.add_resource(Carteira, '/carteira/<int:acao_id>')
 

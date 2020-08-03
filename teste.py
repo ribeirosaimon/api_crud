@@ -4,15 +4,26 @@ BASE = 'http://127.0.0.1:5000/'
 
 data =[{'acao':'movi3','pm':15.54},
         {'acao':'shul4','pm':11.10},
-        {'acao':'obir3','pm':1.70},
-        {'acao':'wege3','pm':55.71}]
+        {'acao':'obir3','pm':1.70}]
 
-for i in range(len(data)):
-    response = request.put(BASE + 'carteira/'+str(i),data[i] )
+for x in range(len(data)):
+    response = request.put(BASE + 'carteira/'+str(x), data[x])
+    print(data[x])
+    print(len(data))
     print(response.json())
+    input()
 
-response = request.delete(BASE + 'carteira/1')
+
+for x in range(len(data)):
+    response = request.get(BASE + 'carteira/'+str(x))
+    print(response.json())
+    print(data)
+    print(len(data))
+
+    input()
+
+
+
+response = request.delete(BASE + 'carteira/0')
 print(response)
 input()
-response = request.get(BASE + 'carteira/1')
-print(response)
