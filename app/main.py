@@ -1,9 +1,21 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort
-
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
+
+class CarteiraModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    acao = db.Column(db.String(15), nullable=False)
+    pm = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return  f'Carteira(Ação: {acao}, preco_medio: {pm})'
+
+db.create_all()
 
 carteira_put_args = reqparse.RequestParser()
 carteira_put_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
