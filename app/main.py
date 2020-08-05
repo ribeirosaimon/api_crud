@@ -16,9 +16,6 @@ class CarteiraModel(db.Model):
         return  f'Carteira(Ação: {acao}, preco_medio: {pm})'
 
 db.create_all()
-
-
-
 carteira_put_args = reqparse.RequestParser()
 carteira_put_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
 carteira_put_args.add_argument('pm', type=float, help='Preço Médio', required=True)
@@ -51,6 +48,10 @@ class Carteira(Resource):
 		db.session.add(acao)
 		db.session.commit()
 		return acao, 201
+
+
+
+
 
 api.add_resource(Carteira, '/carteira/<int:acao_id>')
 
