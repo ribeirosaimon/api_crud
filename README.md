@@ -2,6 +2,6 @@
  Apresentando API Crud
 
 
-tutorial = https://www.youtube.com/watch?v=GMppyAPbLYk&t=1158s
-
-34
+  ```sh
+  export FLASK_APP=app
+  ```
