@@ -15,11 +15,15 @@ class CarteiraModel(db.Model):
     def __repr__(self):
         return  f'Carteira(Ação: {acao}, preco_medio: {pm})'
 
-db.create_all()
+
 carteira_put_args = reqparse.RequestParser()
 carteira_put_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
 carteira_put_args.add_argument('pm', type=float, help='Preço Médio', required=True)
 
+
+carteira_update_args = reqparse.RequestParser()
+carteira_update_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
+carteira_update_args.add_argument('pm', type=float, help='Preço Médio', required=True)
 
 resource_fields = {
 	'id': fields.Integer,
@@ -50,7 +54,22 @@ class Carteira(Resource):
 		return acao, 201
 
 
+    @marshal_with(resource_fields)
+    def patch(self, acao_id):
+        args = carteira_put_args()
+        result = CarteiraModel.query.filter_by(id=acao_id).first()
+        if not result:
+            abort(404, message='Stock doesn´t, cannot update ')
 
+        if 'acao' in args:
+            result.acao = args['acao']
+        if 'pm' in args:
+            result.pm = args['pm']
+
+        db.session.add(result)
+        db.session.commit()
+
+        return result
 
 
 api.add_resource(Carteira, '/carteira/<int:acao_id>')
