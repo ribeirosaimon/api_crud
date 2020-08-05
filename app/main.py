@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse, abort
+from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -17,36 +17,40 @@ class CarteiraModel(db.Model):
 
 db.create_all()
 
+
+
 carteira_put_args = reqparse.RequestParser()
 carteira_put_args.add_argument('acao', type=str, help='Papel da Empresa', required=True)
 carteira_put_args.add_argument('pm', type=float, help='Preço Médio', required=True)
 
-carteira = {}
 
-def se_acao_nao_existir(acao_id):
-    if acao_id not in carteira:
-        abort(404, message='Não consigo achar essa ação')
+resource_fields = {
+	'id': fields.Integer,
+	'acao': fields.String,
+	'pm': fields.Float
+}
 
-def se_ja_existir_acao(acao_id):
-    if acao_id in carteira:
-        abort(404, message='Essa ação já existe')
 
 
 class Carteira(Resource):
-    def get(self, acao_id):
-        se_acao_nao_existir(acao_id)
-        return carteira[acao_id]
+	@marshal_with(resource_fields)
+	def get(self, acao_id):
+		result = CarteiraModel.query.filter_by(id=acao_id).first()
+		if not result:
+			abort(404, message="Could not find stock with that id")
+		return result
 
-    def put(self, acao_id):
-        se_ja_existir_acao(acao_id)
-        args = carteira_put_args.parse_args()
-        carteira[acao_id] = args
-        return carteira[acao_id], 201
+	@marshal_with(resource_fields)
+	def put(self, acao_id):
+		args = carteira_put_args.parse_args()
+		result = CarteiraModel.query.filter_by(id=acao_id).first()
+		if result:
+			abort(409, message="Ação id taken...")
 
-    def delete(self, acao_id):
-        se_acao_nao_existir(acao_id)
-        del carteira[acao_id]
-        return '', 204
+		acao = CarteiraModel(id=acao_id, acao=args['acao'], pm=args['pm'])
+		db.session.add(acao)
+		db.session.commit()
+		return acao, 201
 
 api.add_resource(Carteira, '/carteira/<int:acao_id>')
 

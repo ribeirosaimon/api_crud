@@ -38,7 +38,7 @@ class Video(Resource):
 	def get(self, video_id):
 		result = VideoModel.query.filter_by(id=video_id).first()
 		if not result:
-			abort(404, message="Could not find video with that id")
+			abort(404, message="Could not find stock with that id")
 		return result
 
 	@marshal_with(resource_fields)
