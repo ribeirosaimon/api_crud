@@ -1,16 +1,15 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
+from resources.carteira import Carteira, Acao
 
 app = Flask(__name__)
 api = Api(app)
 
 
-class Carteira(Resource):
-    def get(self):
-        return {'acao':'movi3','preco_medio':'15.8'}
 
 
 api.add_resource(Carteira, '/carteira')
+api.add_resource(Acao, '/carteira/<int:acao_id>')
 
 if __name__ == '__main__':
     app.run(debug=True)
