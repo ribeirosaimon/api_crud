@@ -1,8 +1,12 @@
+from banco_de_dados import banco
 
 
+class CarteiraModel(banco.Model):
+    __tablename__ = 'carteira'
+    acao_id = banco.Column(banco.Integer, primary_key=True)
+    acao = banco.Column(banco.String(15))
+    preco_medio = banco.Column(banco.Float(precision=2))
 
-
-class CarteiraModel:
     def __init__(self, acao_id, acao, preco_medio):
         self.acao_id = acao_id
         self.acao = acao
@@ -14,3 +18,14 @@ class CarteiraModel:
             'acao':self.acao,
             'preco_medio':self.preco_medio
         }
+
+    @classmethod
+    def find_acao(cls, acao_id):
+        acao = cls.query.filter_by(acao_id=acao_id).first()
+        if acao:
+            return acao
+        return None
+
+    def save_acao(self):
+        banco.session.add(self)
+        banco.session.commit()
