@@ -29,3 +29,11 @@ class CarteiraModel(banco.Model):
     def save_acao(self):
         banco.session.add(self)
         banco.session.commit()
+
+    def update_acao(self, acao, preco_medio):
+        self.acao = acao
+        self.preco_medio = preco_medio
+
+    def delete_acao(self):
+        banco.session.delete(self)
+        banco.session.commit()
