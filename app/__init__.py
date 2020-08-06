@@ -6,7 +6,7 @@ from .serealizer import configure as config_ma
 def create_app():
     app = Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/carteira.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////carteira.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
