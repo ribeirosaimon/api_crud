@@ -2,15 +2,12 @@ from flask import Flask
 from flask_restful import Api
 from resources.carteira import Carteira, Acao
 from resources.usuario import Usuarios, Usuario
-import os
-import psycopg2
-from banco_de_dados import banco
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-banco.init_app(app)
+
 api = Api(app)
 
 @app.before_first_request
@@ -25,4 +22,5 @@ api.add_resource(Usuario,'/usuarios/<int:usuario>')
 
 if __name__ == '__main__':
     from banco_de_dados import banco
+    banco.init_app(app)
     app.run(debug=True)
