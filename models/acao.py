@@ -6,17 +6,20 @@ class CarteiraModel(banco.Model):
     acao_id = banco.Column(banco.Integer, primary_key=True)
     acao = banco.Column(banco.String(15))
     preco_medio = banco.Column(banco.Float(precision=2))
+    usuario = banco.Column(banco.Integer, banco.ForeignKey('usuario.usuario'))
 
-    def __init__(self, acao_id, acao, preco_medio):
+    def __init__(self, acao_id, acao, preco_medio, usuario):
         self.acao_id = acao_id
         self.acao = acao
         self.preco_medio = preco_medio
+        self.usuario = usuario
 
     def json(self):
         return {
             'acao_id':self.acao_id,
             'acao':self.acao,
-            'preco_medio':self.preco_medio
+            'preco_medio':self.preco_medio,
+            'usuario':self.usuario
         }
 
     @classmethod
