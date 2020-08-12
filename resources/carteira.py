@@ -30,8 +30,8 @@ class Acao(Resource):
             return {'message':'Stock not associated'}, 400
         try:
             acao.save_acao()
-        except:
-            return {'message': 'An internal error ocurred trying to save stock.'},500
+        except Exception as e:
+            return {'message':f'{e}'},500
         return acao.json(), 200
 
     def put(self, acao_id):
