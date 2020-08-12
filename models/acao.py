@@ -28,7 +28,8 @@ class CarteiraModel(banco.Model):
         if acao:
             return acao
         return None
-
+        
+    @classmethod
     def save_acao(self):
         banco.session.add(self)
         banco.session.commit()
